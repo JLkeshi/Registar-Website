@@ -5,10 +5,10 @@
 
    Edit this file to change what Reggie says.
 
-   - Text inside [[double brackets]] is a PLACEHOLDER (not in the
-     Citizen's Charter). Reggie shows it highlighted in yellow so you
-     can spot it while testing. Replace it with the real answer and
-     delete the [[ ]].
+   - {{OFFICE}} = Reggie says sorry and sends the student to the Office
+     of the College Registrar. Use it ONLY when the Citizen's Charter has
+     no answer at all. The message is defined below (OFFICE_MSG).
+     To give a real answer later, replace the token with the actual text.
    - "\n" makes a new line.
    - The form links below are the same as in script.js.
    ========================================================== */
@@ -16,17 +16,22 @@
 window.REGGIE_FAQ = (function () {
   "use strict";
 
-  /* ---------- Default placeholders (used when the Charter has no answer) ---------- */
+  /* ---------- Defaults (used when the Charter has no answer) ---------- */
   const TODO = {
-    req:   "[[CONFIRM: List the requirements for this request, e.g. valid ID, documents to upload, signed forms.]]",
-    fee:   "[[CONFIRM: State the fee (or that it is free) and how to pay.]]",
-    time:  "[[CONFIRM: Number of working days to process this request.]]",
-    claim: "[[CONFIRM: How it is released: pick-up at the Registrar's Office, email, or courier.]]"
+    req:   "{{OFFICE}}",
+    fee:   "{{OFFICE}}",
+    time:  "{{OFFICE}}",
+    claim: "{{OFFICE}}"
   };
+
+  /* ---------- Message used whenever the Citizen's Charter has no answer ----------
+     Change the wording here and it updates everywhere.                           */
+  const OFFICE_MSG = "I'm sorry, I don't have that information yet. \uD83D\uDE4F\n\nPlease visit the Office of the College Registrar so the staff can give you the correct answer.";
 
   const nodes = {};
 
   function add(id, label, answer, next, extra) {
+    answer = answer.replace(/\{\{OFFICE\}\}/g, OFFICE_MSG);
     nodes[id] = Object.assign({ id: id, label: label, answer: answer, next: next || [] }, extra || {});
   }
 
@@ -90,7 +95,7 @@ window.REGGIE_FAQ = (function () {
     { req: CERT.req, steps: CERT.steps, fee: CERT.fee, time: CERT.time, claim: CERT.claim,
       extras: [
         "certs.list",
-        ["How many copies can I request?", "[[CONFIRM: Number of copies allowed per request.]]"]
+        ["How many copies can I request?", "{{OFFICE}}"]
       ] });
 
   transaction("graduation", "Certificate of Graduation",
@@ -100,7 +105,7 @@ window.REGGIE_FAQ = (function () {
       extras: [
         "certs.list",
         "grad.clearance",
-        ["When can I request it?", "[[CONFIRM: Eligibility, e.g. after the graduation list is approved or after clearance is complete.]]"]
+        ["When can I request it?", "{{OFFICE}}"]
       ] });
 
   transaction("tor", "Form 137-A / Transcript of Records",
@@ -113,16 +118,16 @@ window.REGGIE_FAQ = (function () {
       claim: "Claim your TOR at the Registrar's Office on the date written on your claim stub, which is 7 days after your request.",
       extras: [
         "other.grades",
-        ["Can I request a TOR for evaluation only?", "[[CONFIRM: Whether an \"evaluation only\" or \"copy for\" TOR is offered and how it differs from the official TOR.]]"],
-        ["Can the TOR be sent directly to another school?", "[[CONFIRM: Whether the Registrar can send it directly to the receiving school or employer, and how to arrange this.]]"],
-        ["Why can't I get my TOR yet?", "[[CONFIRM: Common reasons for holds, e.g. unsettled accounts, incomplete grades, or pending clearance.]]"]
+        ["Can I request a TOR for evaluation only?", "{{OFFICE}}"],
+        ["Can the TOR be sent directly to another school?", "{{OFFICE}}"],
+        ["Why can't I get my TOR yet?", "{{OFFICE}}"]
       ] });
 
   transaction("transfer", "Certificate of Transfer / Honorable Dismissal",
     "https://docs.google.com/forms/d/e/1FAIpQLSeyfiij2evNzmSNOYeiUtiPX_E3viDzNS0kTcd8PO1_IKR_nw/viewform",
     "The Certificate of Transfer / Honorable Dismissal certifies that you are leaving the college in good standing so that you may transfer to another school. The receiving school normally asks for it.",
     { extras: [
-        ["What else do I need when transferring?", "Transferring students are commonly asked for an Honorable Dismissal and a Transcript of Records (see \"Form 137-A / Transcript of Records\" for its requirements, fee and release time), and may need an Exit Clearance.\n[[CONFIRM: The exact documents the college requires before releasing the Honorable Dismissal, and its fee and processing time. The Citizen's Charter does not list them.]]"]
+        ["What else do I need when transferring?", "Transferring students are commonly asked for an Honorable Dismissal and a Transcript of Records (see \"Form 137-A / Transcript of Records\" for its requirements, fee and release time), and may need an Exit Clearance."]
       ] });
 
   /* ==========================================================
@@ -136,11 +141,11 @@ window.REGGIE_FAQ = (function () {
       fee: "Php 25 per subject.",
       time: "About 5 minutes for each of the 3 steps (around 15 minutes in total).",
       claimLabel: "How will I know it is processed?",
-      claim: "After you submit your accomplished dropping form, the Registrar's staff receive and file it. Keep your own copy of the form and your official receipt.\n[[CONFIRM: Whether students are notified once the drop is recorded.]]",
+      claim: "After you submit your accomplished dropping form, the Registrar's staff receive and file it. Keep your own copy of the form and your official receipt.",
       extras: [
-        ["Is there a deadline for dropping?", "[[CONFIRM: The last day for dropping subjects each semester.]]"],
-        ["Do I need approval from my instructor or adviser?", "[[CONFIRM: Required signatures or approvals before the Registrar processes the drop.]]"],
-        ["Will I get a refund?", "[[CONFIRM: Refund policy for dropped subjects, if any, and which office handles it.]]"]
+        ["Is there a deadline for dropping?", "{{OFFICE}}"],
+        ["Do I need approval from my instructor or adviser?", "{{OFFICE}}"],
+        ["Will I get a refund?", "{{OFFICE}}"]
       ] });
 
   transaction("loa", "Leave of Absence (LOA) Form",
@@ -153,8 +158,8 @@ window.REGGIE_FAQ = (function () {
       claimLabel: "Do I get a copy of my LOA?",
       claim: "Yes. When you submit your LOA form at the Registrar's Office, you secure your own copy. Keep it, because it is required when you apply for a returning clearance.",
       extras: [
-        ["How long can my leave be?", "[[CONFIRM: Maximum length of an LOA and how to extend it.]]"],
-        ["What do I do when I want to come back?", "When you return, you will need a returning clearance. Your LOA is one of its requirements. See \"Application for Exit Clearance\" for how clearances are filed, and \"Application for Returning Student\" for readmission.\n[[CONFIRM: Any other steps for re-entering after an LOA.]]"]
+        ["How long can my leave be?", "{{OFFICE}}"],
+        ["What do I do when I want to come back?", "When you return, you will need a returning clearance. Your LOA is one of its requirements. See \"Application for Exit Clearance\" for how clearances are filed, and \"Application for Returning Student\" for readmission."]
       ] });
 
   transaction("returning", "Application for Returning Student",
@@ -165,12 +170,12 @@ window.REGGIE_FAQ = (function () {
       fee: "Php 100.",
       time: "About 5 minutes for each of the 4 steps (around 20 minutes in total).",
       claimLabel: "What happens after I submit?",
-      claim: "The Registrar's staff receive and file your accomplished forms.\n[[CONFIRM: How you are told that your readmission is approved and when you may enroll.]]",
+      claim: "The Registrar's staff receive and file your accomplished forms.",
       extras: [
         ["Do I need a returning clearance?", "The Citizen's Charter lists a returning clearance among the clearances filed at the Registrar's Office. If you took a leave of absence, your LOA is a requirement for it. See \"Application for Exit Clearance\" for the steps."],
-        ["Who needs to apply as a returning student?", "[[CONFIRM: Who qualifies, e.g. students who did not enroll for one or more semesters without a filed LOA.]]"],
-        ["Will my previous grades carry over?", "[[CONFIRM: How previous subjects and grades are treated for returning students.]]"],
-        ["When is the application period?", "[[CONFIRM: Application dates or deadlines.]]"]
+        ["Who needs to apply as a returning student?", "{{OFFICE}}"],
+        ["Will my previous grades carry over?", "{{OFFICE}}"],
+        ["When is the application period?", "{{OFFICE}}"]
       ] });
 
   /* ==========================================================
@@ -187,8 +192,8 @@ window.REGGIE_FAQ = (function () {
       claim: "After you submit the completed form at the Registrar's Office, wait for your copy. The staff will receive and file the clearance and give you your copy.",
       extras: [
         ["What is a returning clearance?", "A returning clearance is filed at the Registrar's Office the same way as an exit clearance, for students coming back to the college. Your LOA is a requirement if you took a leave of absence."],
-        ["Which offices need to clear me?", "[[CONFIRM: List of offices, e.g. library, laboratory, accounting, guidance, department.]]"],
-        ["What if one office has not cleared me?", "[[CONFIRM: What to do if an office has a pending obligation or hold.]]"]
+        ["Which offices need to clear me?", "{{OFFICE}}"],
+        ["What if one office has not cleared me?", "{{OFFICE}}"]
       ] });
 
   transaction("ecav", "eCAV",
@@ -197,8 +202,8 @@ window.REGGIE_FAQ = (function () {
     { linkLabel: "Open CHED One Touch",
       claimLabel: "How do I get my eCAV?",
       extras: [
-        ["Who needs an eCAV?", "[[CONFIRM: Who is expected to request an eCAV, e.g. graduates applying for work or study abroad.]]"],
-        ["Do I need documents from the Registrar first?", "[[CONFIRM: Documents or certifications the Registrar must issue before you apply on CHED One Touch.]]"],
+        ["Who needs an eCAV?", "{{OFFICE}}"],
+        ["Do I need documents from the Registrar first?", "{{OFFICE}}"],
         ["I can't log in to CHED One Touch.", "Account and login concerns for the portal are handled through CHED's One Touch system, so please use the portal's own help or password recovery options.\nFor steps that involve the Registrar's Office, tap \"Contact the Registrar\" in the main menu."]
       ] });
 
@@ -235,12 +240,6 @@ window.REGGIE_FAQ = (function () {
   info("other.petition", "Petition for opening of a subject",
     "Petition of Opening of Subject\n\nSteps:\n1. Go to the Registrar's Office to get the petition form.\n2. Fill it out, sign it and submit it. The staff will receive and file the petition.\n\nRequirements: none listed.\nFee: Free (none listed in the Citizen's Charter).\nProcessing time: about 5 minutes per step.");
 
-  info("other.change", "Request for change of grade",
-    "Request for Change of Grade\n\nWho may request: students or teachers.\n\nRequirements:\n- Letter for change of grade\n- Attachment/s (supporting documents)\n\nSteps:\n1. Submit your letter and supporting documents at the Registrar's Office no later than 1 month after the submission of grades. The College Registrar reviews them and may request an audience with the APC if needed.\n2. You will receive a copy of the resolution. The College Registrar presents it to the concerned faculty and makes the necessary changes to the grades.\n\nFee: Free (none listed in the Citizen's Charter).\nProcessing time: up to 1 month.");
-
-  info("other.faculty", "Submission of grades (for faculty)",
-    "Submission of Grades by the Faculty\n\nFor teachers only.\n\nRequirement: Grade sheet\n\nSteps:\n1. Submit the grades online through the E-Guro Learning Management System. The Registrar's staff will print the grade sheets.\n2. Sign the grade sheets on the date set by the Registrar's Office. The staff will announce the date.\n\nFee: Free.\nProcessing time: about 5 minutes per step.");
-
   /* ==========================================================
      GENERAL QUESTIONS
      ========================================================== */
@@ -248,46 +247,46 @@ window.REGGIE_FAQ = (function () {
     "It is simple:\n1. Choose your service on the main page.\n2. Fill out the Google Form completely and accurately.\n3. Submit it and wait for the Registrar's Office to process your request.\n\nEach service opens the official form in a new tab. For the exact steps, fees and requirements of each service, ask Reggie about that service.");
 
   add("g.office", "Do I still need to go to the Registrar's Office?",
-    "Many services listed in the Citizen's Charter involve paying at the Cashier's Office and claiming your document at the Registrar's Office.\n[[CONFIRM: Which steps are now done online through the forms and which still need an office visit, including how payment is made for online requests.]]");
+    "Yes. According to the Citizen's Charter, every service has at least one step at the Registrar's Office, such as getting or submitting a form, or claiming your document.\n\nPayments are NOT made directly to the Registrar's Office. Always pay at the Cashier's Office first, then present your official receipt at the Registrar's Office.\n\nServices with a fee (pay at the Cashier):\n- Certificates: Php 50 per page\n- Transcript of Records: Php 50 per page\n- Copy of Grades: Php 30\n- Authentication of documents: Php 30 per document\n- Second copy: Registration Form Php 100, Comp Card Php 50, Diploma Php 300\n- Completion Form: Php 50\n- Late enrollment, readmission and shifting: Php 100\n- Dropping of subjects: Php 25 per subject\n- Leave of Absence: Php 25 per subject\n\nServices with no payment:\n- Enrollment and pre-registration\n- Exit and returning clearance\n- Graduation clearance\n- Petition for opening of a subject");
 
   add("g.which", "Which form should I choose?",
     "Here is a quick guide:\n- Proof that you are enrolled: Certificate of Enrollment\n- Proof that you graduated: Certificate of Graduation\n- Your grades and subjects: Transcript of Records\n- Moving to another school: Honorable Dismissal (and usually a TOR)\n- Removing a subject: Dropping Form\n- Pausing your studies: Leave of Absence\n- Coming back after a break: Application for Returning Student\n- Leaving or graduating and settling obligations: Exit Clearance\n- CHED certification or verification: eCAV");
 
   add("g.who", "Who can request?",
-    "According to the Citizen's Charter, these services are for students. A few are for teachers, such as submission of grades. A change of grade can be requested by either a teacher or a student.\n[[CONFIRM: Whether graduates, alumni, former students or authorized representatives may also request.]]");
+    "According to the Citizen's Charter, these services are for students.");
 
   add("g.fee", "How much do the services cost?",
     "Fees from the Citizen's Charter:\n- Certificates (Enrollment, GWA, Medium of Instruction, Graduation, Completion): Php 50 per page\n- Transcript of Records: Php 50 per page\n- Copy of Grades: Php 30\n- Dropping of subjects: Php 25 per subject\n- Leave of Absence: Php 25 per subject\n- Late enrollment, readmission and shifting: Php 100\n- Authentication of documents: Php 30 per document\n- Second copy: Registration Form Php 100, Comp Card Php 50, Diploma Php 300\n- Completion Form: Php 50\n\nFree: enrollment, pre-registration, exit/returning clearance, graduation clearance, and petition for opening of a subject.\n\nFor the Honorable Dismissal and eCAV, please ask Reggie about that service.");
 
   add("g.time", "How long does processing take?",
-    "Processing times from the Citizen's Charter:\n- Transcript of Records: 7 days\n- Copy of Grades: 7 days\n- Certificates: about 15 minutes to release\n- Diploma (second copy): 14 days\n- Registration Form or Comp Card (second copy): about 10 minutes\n- Dropping, LOA, clearances, authentication and most other forms: about 5 minutes per step\n- Change of grade: up to 1 month\n\nAsk Reggie about a specific service to see its full breakdown.");
+    "Processing times from the Citizen's Charter:\n- Transcript of Records: 7 days\n- Copy of Grades: 7 days\n- Certificates: about 15 minutes to release\n- Diploma (second copy): 14 days\n- Registration Form or Comp Card (second copy): about 10 minutes\n- Dropping, LOA, clearances, authentication and most other forms: about 5 minutes per step\n\nAsk Reggie about a specific service to see its full breakdown.");
 
   add("g.status", "How will I know the status of my request?",
-    "[[CONFIRM: How requests are communicated, e.g. email notification, Facebook page announcement, or checking with the office.]]");
+    "{{OFFICE}}");
 
   add("g.claim", "How will I receive my document?",
-    "For documents such as the TOR, Copy of Grades and certificates, the Citizen's Charter says you present the request form and official receipt at the Registrar's Office, receive a claim stub, and claim the document on the date written on the stub.\n[[CONFIRM: Other release options (email or courier) and what to bring when claiming.]]");
+    "For documents such as the TOR, Copy of Grades and certificates, the Citizen's Charter says you present the request form and official receipt at the Registrar's Office, receive a claim stub, and claim the document on the date written on the stub.");
 
   add("g.proxy", "Can someone request or claim for me?",
-    "[[CONFIRM: Whether a representative may request or claim on your behalf, and what they must bring, e.g. authorization letter, your valid ID, their valid ID.]]");
+    "{{OFFICE}}");
 
   add("g.hours", "What are the office hours and where is the office?",
-    "[[CONFIRM: Registrar's Office location, days and hours, and any break or holiday schedules.]]");
+    "{{OFFICE}}");
 
   /* ==========================================================
      PROBLEMS & TIPS
      ========================================================== */
   add("t.signin", "The form asks me to sign in",
-    "Some forms need a Google account to open or submit. Sign in with your Google account and try again.\n[[CONFIRM: Whether students must use their school email (@ccc.edu.ph) or may use a personal Google account.]]");
+    "Some forms need a Google account to open or submit. Sign in with your Google account and try again.");
 
   add("t.open", "The form or link won't open",
     "Try these steps:\n1. Check your internet connection.\n2. Refresh the page or try another browser.\n3. Make sure pop-ups are not blocked, because forms open in a new tab.\n4. If it still does not work, tap \"Contact the Registrar\" and tell us which service you were trying to open.");
 
   add("t.wrong", "I made a mistake in my submission",
-    "Whether a response can be edited depends on how the form is set up. Please contact the Registrar and include your full name and the request you submitted so it can be corrected.\n[[CONFIRM: The preferred way to report a correction and what details to include.]]");
+    "Whether a response can be edited depends on how the form is set up. Please contact the Registrar and include your full name and the request you submitted so it can be corrected.");
 
   add("t.noreply", "I haven't heard back about my request",
-    "Please check the processing time for your service first (see that service's \"How long does it take?\" or the general processing times).\nIf the usual time has passed, contact the Registrar and include your full name, student number and the request you submitted.\n[[CONFIRM: What details to include and which email to use for follow-ups.]]");
+    "Please check the processing time for your service first (see that service's \"How long does it take?\" or the general processing times).\nIf the usual time has passed, contact the Registrar and include your full name, student number and the request you submitted.");
 
   add("t.tips", "Tips for a smooth request",
     "- Use your complete name exactly as it appears in your school records.\n- Double-check your student number, program and contact details.\n- Prepare any required documents, documentary stamps and your official receipt before going to the Registrar's Office.\n- Submit only once per request.\n- Keep a screenshot or copy of what you submitted, and keep your receipts and claim stubs.");
@@ -296,7 +295,7 @@ window.REGGIE_FAQ = (function () {
      CONTACT
      ========================================================== */
   add("contact", "Contact the Registrar",
-    "For anything Reggie can't answer, you can reach the Registrar's Office by email or through our Facebook page. Tap the button below to see the contact details.",
+    "Tap the button below to see the contact details.",
     [], { action: "contact" });
 
   /* ==========================================================
@@ -316,7 +315,7 @@ window.REGGIE_FAQ = (function () {
 
   add("cat.status", "Dropping, LOA & returning",
     "Which student status request do you need help with?",
-    ["dropping", "loa", "returning", "other.petition", "other.change"]);
+    ["dropping", "loa", "returning", "other.petition"]);
 
   add("cat.clearance", "Clearance & eCAV",
     "Which one do you need help with?",
@@ -326,14 +325,10 @@ window.REGGIE_FAQ = (function () {
     "Sorry you're having trouble. What's happening?",
     ["t.signin", "t.open", "t.wrong", "t.noreply", "t.tips"]);
 
-  add("cat.faculty", "For faculty",
-    "Here is the process for teachers:",
-    ["other.faculty", "other.change"]);
-
   return {
     greeting: "Hi! I'm Reggie, the Registrar's virtual assistant. I can answer common questions about processing your requests, forms and clearances, including their requirements, fees and processing times.\n\nWhat would you like to know?",
     rootPrompt: "What else can I help you with?",
-    root: ["cat.general", "cat.enroll", "cat.records", "cat.status", "cat.clearance", "cat.faculty", "cat.help", "contact"],
+    root: ["cat.general", "cat.enroll", "cat.records", "cat.status", "cat.clearance", "cat.help", "contact"],
     nodes: nodes
   };
 })();
