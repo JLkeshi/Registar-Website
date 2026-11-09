@@ -26,7 +26,7 @@ window.REGGIE_FAQ = (function () {
 
   /* ---------- Message used whenever the Citizen's Charter has no answer ----------
      Change the wording here and it updates everywhere.                           */
-  const OFFICE_MSG = "I'm sorry, I don't have that information yet. \uD83D\uDE4F\n\nPlease visit the Office of the College Registrar so the staff can give you the right answer.";
+  const OFFICE_MSG = "I'm sorry, I don't have that information yet. \uD83D\uDE4F\n\nPlease visit the Office of the College Registrar so the staff can further assist you.";
 
   const nodes = {};
 
